@@ -1,0 +1,13 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+{% block branding %}
+<h1 id ="head">
+    <img src="{% static 'shop/images/logo.png' %}" alt="HardReco" height="50" width="50" class="brand_img">
+    Welcome to Hardware Reccomender
+</h1>
+{% endblock %}
+
+
+{% block extrastyle %}
+<link rel="stylesheet" href="{%static 'shop/css/admin.css' %}">
+{% endblock %}

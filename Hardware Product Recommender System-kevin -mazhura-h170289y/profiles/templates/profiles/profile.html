@@ -1,0 +1,147 @@
+{% extends 'profiles/base.html' %}
+{% load static markdown_deux_tags %}
+
+{% block css %}
+
+    <style>
+        #avatar {
+            margin-bottom: 20px;
+        }
+        h5.bio {
+            font-size: 40px;
+        }
+    </style>
+
+{% endblock %}
+
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <article>
+                    <div class="container" id="avatar">
+                        <div class="row">
+                            <div class="col-md-6">
+                                {% if profile.avatar %}
+                                    <img height="50px" src="{{ profile.avatar.url }}" alt="{{ profile.first_name }} {{ profile.last_name }}">
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <h1>Name: {{ profile.first_name }} {{ profile.last_name }}</h1>
+                                <h2>Email: {{ profile.email }}</h2>
+                                <p>Date of Birth: {{ profile.date_of_birth }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <div class="col-md-2">
+                
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h5 class="bio">BIO</h5>
+                    <hr>
+                    <p>{{ profile.display_bio|markdown }}</p>
+                    <hr>
+                    {% if profile.city %}
+                        <p>City: {{ profile.city }}</p>
+                    {% endif %}
+                    {% if profile.state %}
+                        <p>State: {{ profile.state }}</p>
+                    {% endif %}
+                    {% if profile.country_of_residence %}
+                        <p>Country: {{ profile.country_of_residence }}</p>
+                    {% endif %}
+                    {% if profile.favorite_animal %}
+                        <p>Animal: {{ profile.favorite_animal }}</p>
+                    {% endif %}
+                    {% if profile.hobby %}
+                        <p>Hobby: {{ profile.hobby }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </article>
+    
+            </div>
+            <div class="col-md-2">
+                <div class="col-md-2">
+                    <form action="{% url 'profiles:add_intrest' profile.slug %}" method="post">
+
+                        {% csrf_token %}
+                    <p>
+                <label for="id_profile">Profile:</label>
+                <select name="profile" required="" id="id_profile" >
+                    {% if profile %}
+                <option value="{{profile.id }}" selected="">{{ profile }}</option>
+                {% endif %}
+                </select>
+                    
+                </p>
+                <p>
+                    <label for="id_intrest">Intrest:</label>
+                    <select name="intrest" required="" id="id_intrest">
+                <option value="" selected=""> </option>
+                {% if categories %}
+                    {% for category in categories %}
+                    <option value="{{category.id}}">{{category}}</option>
+                    {% endfor %}
+                {% endif %}
+                </select>
+      </p>
+      <input type="submit" value="add to profile"/>
+    </form>
+      <form style="font-size: xx-small" method="POST" enctype="multipart/form-data" action="" id="formUpload">
+        {% csrf_token %}
+
+      </form>
+
+  
+<script>
+$('#multiple-select').mobiscroll().select({
+        inputElement: document.getElementById('my-input'),
+        touchUi: false
+    });
+</script>
+    
+      <hr/>
+      <p>Your Intrests</p>
+      <hr/>
+      {% if my_intrests %}
+        {% for intrest in my_intrests %}
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked/>
+            <label class="form-check-label" for="flexCheckDefault">{{intrest.intrest.name }}</label>
+        </div>
+        {% endfor %}
+      {% endif %}
+                </div>
+            </div>
+        </div>
+        
+    </div>
+  
+
+    <a href="{% url 'profiles:edit-profile' profile.slug %}" class="button">Edit</a>
+    <a href="{% url 'profiles:change-password' profile.slug %}" class="button">Change Password</a>
+
+{% endblock %}
+
+
+
+ {% if profiles %}
+        {% for profile in profiles %}
+ {% if profile.avatar %}
+                        <img height="50px" src="{{ profile.avatar.url }}" alt="{{ profile.first_name }} {{ profile.last_name }}">
+                    {% endif %}
+            <a href="{{ profile.get_absolute_url }}"><h1>{{ profile.first_name }} {{ profile.last_name }}</h1></a>
+            <a href="{% url 'profiles:edit-profile' profile.slug %}" class="button">Edit</a>
+            <a href="{% url 'profiles:change-password' profile.slug %}" class="button">Change Password</a>
+        {% endfor %}
+    {% else %}
+        <p>No Profile</p>
+please sign in or sign up
+    {% endif %}

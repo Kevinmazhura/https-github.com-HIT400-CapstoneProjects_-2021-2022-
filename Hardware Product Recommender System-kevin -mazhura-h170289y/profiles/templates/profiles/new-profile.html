@@ -1,0 +1,143 @@
+{% extends 'profiles/base.html' %}
+{% load static markdown_deux_tags %}
+
+{% block css %}
+
+    <link rel="stylesheet" href="{% static 'profiles/cropper/cropper.min.css' %}">
+  <link rel="stylesheet" href="{% static 'profiles/css/global.css' %}">
+
+{% endblock %}
+
+{% block body %}
+    <h1>Add Profile</h1>
+    <form style="font-size: xx-small" method="POST" enctype="multipart/form-data" action="" id="formUpload">
+        {% csrf_token %}
+        {% comment %} {{ form.as_table }} {% endcomment %}
+        
+        <table class="table">
+            <tr>
+              <td col-span="4">
+                <label for="id_user">User:</label>
+                <select name="user" required="" id="id_user">
+                  {% if user %}
+                    <option value="{{user.id}}" selected="">{{user}}</option>
+                  {% endif %}
+                </select>
+              </td>
+              <td col-span="4">
+                <label for="id_first_name">First name:</label>
+        <input type="text" name="first_name" maxlength="50" id="id_first_name">
+      
+              </td>
+              <td col-span="4">
+                <label for="id_email">Email:</label>
+        <input type="email" name="email" maxlength="100" id="id_email">
+      
+              </td>
+            </tr>
+            <tr>
+              <td col-span="4">
+                <label for="id_date_of_birth">Date of birth:</label>
+                      <div class="input-group date">
+                  <input type="text" name="date_of_birth" class="form-control" id="id_date_of_birth" data-dp-config="{&quot;id&quot;: &quot;dp_1&quot;, &quot;picker_type&quot;: &quot;DATETIME&quot;, &quot;linked_to&quot;: null, &quot;options&quot;: {&quot;showClose&quot;: true, &quot;showClear&quot;: true, &quot;showTodayButton&quot;: true, &quot;format&quot;: &quot;MM/DD/YYYY HH:mm&quot;}}">
+                <div class="input-group-addon input-group-append input-group-text">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                  </div>
+                </div>
+              </td>
+              <td col-span="4">
+                <label for="id_bio">Bio:</label>
+                <div class="markdownx">
+              <textarea name="bio" cols="4" rows="2" required="" id="id_bio" class="markdownx-editor markdownx-editor" data-markdownx-editor-resizable="" data-markdownx-urls-path="/markdownx/markdownify/" data-markdownx-upload-urls-path="/markdownx/upload/" data-markdownx-latency="500" data-markdownx-init="" style="overflow: hidden; resize: none; height: 202px; transition: opacity 1s ease 0s;"></textarea>
+          
+              <div class="markdownx-preview"></div>
+          </div>
+              </td>
+              <td col-span="4">
+                <label for="id_avatar">Avatar:</label>
+                <input type="file" name="avatar" accept="image/*" id="id_avatar">
+              </td>
+            </tr>
+            <tr>
+              <td col-span="4">
+                <label for="id_city">City:</label>
+                <input type="text" name="city" maxlength="255" id="id_city">
+              </td>
+              <td col-span="4">
+                <label for="id_district">District:</label>
+                <input type="text" name="district" maxlength="255" id="id_district">
+              </td>
+              <td col-span="4">
+                <label for="id_country_of_residence">Country of residence:</label>
+                <input type="text" name="country_of_residence" maxlength="255" id="id_country_of_residence">
+                
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label for="id_hobby">Hobby:</label>
+                <input type="text" name="hobby" maxlength="255" id="id_hobby">
+              </td>
+            </tr>
+        </table>
+        <input type="submit" class="button" value="Save">
+    </form>
+
+    <!-- MODAL TO CROP THE IMAGE -->
+      <div class="modal fade" id="modalCrop">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h4 class="modal-title">Crop the photo</h4>
+            </div>
+            <div class="modal-body">
+              <img src="" id="image" style="max-width: 100%;">
+            </div>
+            <div class="modal-footer">
+              <div class="btn-group pull-left" role="group">
+                <button type="button" class="btn btn-default js-zoom-in">
+                  <span class="glyphicon glyphicon-zoom-in"></span>
+                </button>
+                <button type="button" class="btn btn-default js-zoom-out">
+                  <span class="glyphicon glyphicon-zoom-out"></span>
+                </button>
+              </div>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Nevermind</button>
+              <button type="button" class="btn btn-primary js-crop-and-upload">Crop and upload</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <!-- CONTAINER TO DISPLAY THE CROPPED IMAGES -->
+      <div class="row" style="margin-top: 20px">
+        {% for photo in photos %}
+          <div class="col-sm-4 col-md-3">
+            <img src="{{ photo.file.url }}" class="thumbnail">
+          </div>
+        {% endfor %}
+      </div>
+
+
+
+{% endblock %}
+
+
+{% block js %}
+
+    <script type="text/javascript" src="{% static 'cropper/cropper.min.js' %}"></script>
+
+<script type="text/javascript"
+            src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script type="text/javascript"
+            src="{% static 'profiles/js/autogrow.js' %}"></script>
+    <script type="text/javascript" src="{% static 'profiles/js/global.js' %}"></script>
+
+    <link href="{% static 'profiles/bootstrap/css/bootstrap.css' %}" rel="stylesheet" type="text/css"/>
+    <script src="{% static 'profiles/bootstrap/js/bootstrap.js' %}"></script>
+
+
+{% endblock %}

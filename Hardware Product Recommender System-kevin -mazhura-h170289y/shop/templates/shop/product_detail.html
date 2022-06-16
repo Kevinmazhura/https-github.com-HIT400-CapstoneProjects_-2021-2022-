@@ -1,0 +1,148 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+ {% block css %}
+ {% load bootstrap_icons %}
+<link href="{% static 'shop/css/productdetail.css' %}" rel="stylesheet" type="text/css" media="all" />
+{% endblock %}
+{% block body %}
+<!-- page -->
+<main>
+  <div class="container">
+    <div class="grid second-nav">
+      <div class="column-xs-12">
+        <nav>
+          <ol class="breadcrumb-list">
+            <li class="breadcrumb-item"><a href="#">Product</a></li>
+            <li class="breadcrumb-item"><a href="#">{{product.category}}</a></li>
+            <li class="breadcrumb-item active"> {{product.subcategory}}</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+    <div class="grid product">
+      <div class="column-xs-12 column-md-7">
+        <div class="product-gallery">
+          <div class="product-image">
+            <img class="active" src="{{product.image_url}}">
+          </div>
+          <ul class="image-list">
+            <li class="image-item"><img src="{{product.image_url}}"></li>
+            <li class="image-item"><img src="{{product.image_url}}"></li>
+            <li class="image-item"><img src="{{product.image_url}}"></li>
+          </ul>
+        </div>
+      </div>
+      <div class="column-xs-12 column-md-5">
+        <h1>{{product.name}}</h1>
+        <h4>Price: <del>$ {{product.price}}</del> ${{product.discount_price}}</h4>
+        <div class="description">
+          <p style="color:black;">{{product.description}}</p>
+            <p style="color:black;">Total reviews:{{ product.review_set.count }} reviews </p>
+            <p style="color:black;"> Average rating: {{ product.average_rating | floatformat }} average rating</p>
+			<p style="color:black;">Last updated: {{product.updated}}</p>
+          <p style="color:black;">Available stock: {{product.stock}} only</p>
+        </div>
+            <div class="product-btns">
+
+                <form action="/order/addtocart/{{ product.id }}" method="post">
+                    {% csrf_token %}
+                    <div class="qty-input">
+                        <input type="number" name="quantity" id="id_quantity" value="1" min="1" max="{{product.stock}}" class="input">
+                    </div>
+                    <input type="submit" class="add-to-cart" value="Add to Cart">
+                </form>
+
+            </div>
+
+      </div>
+    </div>
+    <div class="grid related-products">
+      <div class="column-xs-12">
+        <h3>You may also like : <i style="font-size:x-small" class="success">Recomendation</i></h3>
+      </div>
+      {% if online_products %}
+      {% for product in online_products %}
+      <div class="column-xs-12 column-md-4">
+        <img src="{{ MEDIA_URL }}/{{product.image}}" height="60px" width="70px">
+        <img src="{{product.online_image_url}}" height="60px" width="70px">
+        <h4>{{product.description}}</h4>
+        <h5>{{product.store}}</h5>
+
+
+        <p class="price">{{product.price}}</p>
+        <hr/>
+        <img src="{{ MEDIA_URL }}/{{product.store.image}}" height="60px" width="70px">
+      </div>
+      {% endfor %}
+      {% endif %}
+    </div>
+
+    </div>
+  </div>
+</main>
+
+
+
+{% if product.review_set.all %}
+	<div class="comments-container">
+		<h1>Recent reviews </h1>
+		{% for review in product.review_set.all %}
+		<ul id="comments-list" class="comments-list">
+			<li>
+				<div class="comment-main-level">
+					<!-- Avatar -->
+					<div class="comment-avatar">
+            {% comment %} <img src="{% static 'img/s.png' %}" alt=""> {% endcomment %}
+            {% bs_icon 'person' %}
+          </div>
+					<!-- Contenedor del Comentario -->
+					<div class="comment-box">
+						<div class="comment-head">
+							<h6 class="comment-name by-author">{{ review.user_name}}</h6>
+							<span>{{review.pub_date}}</span>
+							<i class="fa fa-reply"></i>
+							<i class="fa fa-heart"></i>
+						</div>
+						<div class="comment-content"><b>Rated {{ review.rating }} of 5 by {{ review.user_name }}</b></div>
+						<div class="comment-content">
+							{{ review.comment }}
+						</div>
+						<a href="{% url 'shop:review_detail' review.id %}">
+                Read more
+            </a>
+					</div>
+				</div>
+			</li>
+		</ul>
+    {% endfor %}
+</div>
+{% else %}
+<p>No reviews for this product yet</p>
+{% endif %}
+
+
+<div class="comments-container">
+	<h1>Add your review</h1>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="{% url 'shop:add_review' product.id %}" method="post" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form layout='inline' %}
+
+    {% buttons %}
+
+    <button type="submit" class="btn btn-primary">
+      {% bs_icon 'star' %}
+      {% comment %} {% bootstrap_icon "star" %} {% endcomment %}
+       Rate this product
+    </button>
+    {% endbuttons %}
+</form>
+{% endblock %}
+
+</div>
+
+

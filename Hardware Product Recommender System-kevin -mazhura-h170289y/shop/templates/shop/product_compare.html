@@ -1,0 +1,113 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" >
+{% block body %}
+<body>
+{% if request.GET.q %}
+   <div class='col-12 mb-3'>
+    <u> <center> <h1>Result for {{request.GET.q}}</h1> </center></u>
+   </div>
+    {% else %}
+    <div>search bar</div>
+    {% endif %}
+    <h1></h1>
+    <div class="row">
+       {{product}}
+        {% if product %}
+        <a href="{{product.get_absolute_url }}">
+        <div class="col-md-3">
+            <div class="product-grid2">
+                <div class="product-image2">
+                    <a href="#">
+                        <img class="pic-1" src="{{ product.image_url }}">
+                        <img class="pic-2" src="{{ product.image_url }}">
+                    </a>
+                    <ul class="social">
+                        <li><a href="#" data-tip="Quick View"><i class="fa fa-eye"></i></a></li>
+                        <li><a href="#" data-tip="Add to Wishlist"><i class="fa fa-shopping-bag"></i></a></li>
+                        <li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a></li>
+                    </ul>
+                    <a class="add-to-cart" href="">Add to cart</a>
+                </div>
+                <div class="product-content">
+                    <h3 class="title">
+                        <a href="{% url 'shop:product_detail' product.id %}">{{product.name }}</a></h3>
+                    <span class="price">ZWL {{product.price}}</span>
+                    <a href="{% url 'shop:compare_price' product.id %}">Price Comparison</a>
+                </div>
+            </div>
+
+        </div>
+        {% endif %}
+    </div>
+    <hr/>
+    {% comment %} <h2>Recommendation Product List</h2>
+    <hr/>
+    <div class="container">
+        {% if online_products %}
+        
+        <table class="table"> 
+            <thead>
+                <tr>
+                    <th>Product</td>
+                    <th>Store</td>
+                    <th>Image</td>
+                    <th>Price</td>
+                </tr>
+            </thead>
+            <tbody>
+            {% for product in online_products%}
+            <tr>
+                <td>{{product.description}}</td>
+                <td> <img class="pic-1"src="{{ MEDIA_URL }}/{{product.store.image}}" height="20px" width="30px"/>{{product.store}}</td>
+                <td> <img class="pic-1"src="{{ MEDIA_URL }}/{{product.image}}" height="60px" width="70px"/></td>
+                <td> <img class="pic-1"src="{{product.online_image_url}}" height="60px" width="70px"/></td>
+                <td>{{product.price}}</td>
+            </tr>
+        
+            {% endfor %}</tbody>
+        </table>
+        {% endif %}
+
+    </div> {% endcomment %}
+    <div class="row">
+        <h2>Other Related Products</h2>
+        {% if sugested_products %}
+        
+            {% for product in sugested_products %}
+                <a href="{{ product.get_absolute_url }}">
+                    <div class="col-md-3 col-sm-6">
+                        <div class="product-grid2">
+                            <div class="product-image2">
+                                <a href="#">
+                                    <img class="pic-1" src="{{ product.image_url }}">
+                                    <img class="pic-2" src="{{ product.image_url }}">
+                                </a>
+                                <ul class="social">
+                                    <li><a href="#" data-tip="Quick View"><i class="fa fa-eye"></i></a></li>
+                                    <li><a href="#" data-tip="Add to Wishlist"><i class="fa fa-shopping-bag"></i></a></li>
+                                    <li><a href="#" data-tip="Add to Cart"><i class="fa fa-shopping-cart"></i></a></li>
+                                </ul>
+                                <a class="add-to-cart" href="">Add to cart</a>
+                            </div>
+                            <div class="product-content">
+                                
+                                <span class="price">{{ product.name }}</span><br/>
+                                <span class="price">ZWL {{ product.price }}</span>
+
+                                <a href="{% url 'shop:compare_price' product.id %}">Price Comparison</a>
+                            </div>
+                        </div>
+
+                    </div>
+               
+            {% endfor %}
+        {% endif %}
+
+    </div>
+            {% endblock %}
+
+           
+        </body>
+</html>

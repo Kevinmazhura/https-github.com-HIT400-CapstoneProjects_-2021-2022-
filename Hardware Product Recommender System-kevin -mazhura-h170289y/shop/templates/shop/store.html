@@ -1,0 +1,72 @@
+{% extends "shop/base.html" %}
+
+{% block body %}
+
+<div class="container">
+    <div class="" style="background-image:url('{{ MEDIA_URL }}/world.jpg')">
+        <hr/>
+        {% if store %}
+        <table class="table">
+            <tr>
+                <td>{{store}}</td>
+                <td> <a href="{{store.website}}" >
+                    <img src="{{ MEDIA_URL }}/{{store.image}}" height="100" width="100"/></a>
+                    </td>
+            </tr>
+        </table>
+        {% endif %}
+        <hr/>
+    </div>
+
+      <div class="col-md-12">
+             <h5 class="text-center">Products</h5>
+        <hr/>
+        <div class="row">
+          {% if products %}
+            {% for product in products %}
+            <div class="col-md-4"style="font-size:small">
+                <hr/>
+                <table class="table table-bordered">
+                    <tr>
+                        <td  colspan="6">
+                              <img src="{{ MEDIA_URL }}/{{product.image}}" height="20px" width="20px"/>
+                              <img src="{{product.online_image_url}}" height="100" width="100"/>
+
+                        </td>
+                        <td colspan="6">${{product.price}}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="6"><h6>{{product.name}}</h6></td>
+                        <td  colspan="6">{{product.description}}</td>
+                    </tr>
+                    <tr>
+                        <td  colspan="6">
+                            <p class="text-success">
+                                {{product.store.name}}
+                            </p>
+                        </td> <td  colspan="6">
+                            <p class="text-info">
+                                {{product.product_category}}
+                            </p>
+                        </td>
+                    </tr>
+                   
+                    <tr>
+                        <td colspan="12">
+                <p><a class="btn btn-default btn-sm" style="font-size:x-small" href="{{store.website}}">Visit Online&raquo;</a></p>
+                             {% if product.store.name == "Halsteds"%}
+                        <a class="btn btn-default btn-sm" style="font-size:x-small" href={% url 'scrapper:halsteds_categories' %}>Categories &raquo;</a>
+                        <a class="btn btn-default btn-sm" style="font-size:x-small" href="{% url 'scrapper:halsteds_products' %}">Products &raquo;</a>
+                        <a class="btn btn-default btn-sm" style="font-size:x-small" href="{% url 'scrapper:HalstedProducts_by_category' %}">HalstedProducts_by_category &raquo;</a>
+                    {% endif %}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

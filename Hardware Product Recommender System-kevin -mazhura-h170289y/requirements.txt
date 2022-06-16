@@ -1,0 +1,13 @@
+Django
+numpy
+pandas
+scipy
+bootstrap4
+certifi
+django-markdown
+Pillow
+matplotlib
+pymysql
+mysqlclient
+scikit_learn
+sklearn
